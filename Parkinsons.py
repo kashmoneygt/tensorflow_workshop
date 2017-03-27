@@ -46,13 +46,18 @@ def loadData(file):
 #get Parkinson's data
 trainVoiceFeatures, trainLabels, validateVoiceFeatures, validateLabels=loadData(DATA_LOCATION)
 
+NUM_HIDDEN_NEURONS = 10
 
 features = tf.placeholder(tf.float32, [None, NUM_FEATURES]) #feature input
-weights = tf.Variable(tf.zeros([NUM_FEATURES, NUM_CLASSES]))
-biases = tf.Variable(tf.zeros([NUM_CLASSES]))
 
-pred_labels = tf.nn.softmax(tf.matmul(features, weights) + biases) #compute neural network layer to get predicted parkinson's classifications
-                                                                   #=softmax(features*weights+biases)
+weights_1 = tf.Variable(tf.zeros([NUM_FEATURES, NUM_HIDDEN_NEURONS]))
+biases_1 = tf.Variable(tf.zeros([NUM_HIDDEN_NEURONS]))
+hidden = tf.nn.sigmoid(tf.matmul(features, weights_1) + biases_1)
+
+weights = tf.Variable(tf.zeros([NUM_HIDDEN_NEURONS, NUM_CLASSES]))
+biases = tf.Variable(tf.zeros([NUM_CLASSES]))
+pred_labels = tf.nn.softmax(tf.matmul(hidden, weights) + biases) #compute neural network layer to get predicted parkinson's classifications
+                                                                 #=softmax(features*weights+biases)
                                                                     
 true_labels = tf.placeholder(tf.float32, [None, NUM_CLASSES]) #correct parkinson's classifications
 
